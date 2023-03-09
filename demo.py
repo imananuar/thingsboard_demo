@@ -1,6 +1,7 @@
 import time
 import seeed_dht
 from tb_device_mqtt import TBDeviceMqttClient, TBPublishInfo
+import json
 
 thingsboard_server = 'stg-smartagri.maxisiotplatform.com'
 access_token = "iBbdZyImStaWIZRWpzMB"
@@ -27,9 +28,10 @@ def main():
             message = 'Temperature: {}C, Humidity: {}%'.format(temp[1], temp[0]
 
             #Format the data in Json to send to thingsboard
-            telemetry = {"temperature": temp[1], "humidity": temp[0]}
+            telemetry_string = "{'Temperature': temp[1], 'Humidity': temp[0]}"
 
             #Send the data
+            telemetry = json.loads(telemetry_string);
             client.send_telemetry(telemetry).get()
             start = time.time()
             print("Message sent! " + message)
