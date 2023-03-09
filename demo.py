@@ -24,7 +24,7 @@ def main():
 
     temp = temper()
     while True:
-        print('Temperature: ' + temp[0] + "C, Humidity: " + temp[1] + "%")
+        print('Temperature: ' + temp[0].toString() + "C, Humidity: " + temp[1].toString() + "%")
 
 if __name__ == '__main__':
     main()
