@@ -21,10 +21,9 @@ def main():
     #     else:
     #         print('DHT{0}, humidity & temperature: {1}'.format(sensor.dht_type, temp))
     #     time.sleep(1)
-
-    temp = temper()
     while True:
-        print('Temperature: ' + temp[0].toString() + "C, Humidity: " + temp[1].toString() + "%")
+        temp = temper()
+        print('Temperature: {}C, Humidity: {}%'.format(temp[1], temp[0]))
 
 if __name__ == '__main__':
     main()
