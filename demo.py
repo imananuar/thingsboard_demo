@@ -1,5 +1,9 @@
 import time
 import seeed_dht
+from tb_device_mqtt import TBDeviceMqttClient, TBPublishInfo
+
+thingsboard_server = 'stg-smartagri.maxisiotplatform.com'
+access_token = "iBbdZyImStaWIZRWpzMB"
 
 
 def temper():
@@ -7,23 +11,30 @@ def temper():
     humi, temp = sensor.read()
     return humi, temp
 
+
 def main():
 
-    # # for DHT11/DHT22
-    # sensor = seeed_dht.DHT("11", 12)
-    # # for DHT10
-    # # sensor = seeed_dht.DHT("10")
-    
-    # while True:
-    #     humi, temp = sensor.read()
-    #     if not humi is None:
-    #         print('DHT{0}, humidity {1:.1f}%, temperature {2:.1f}*'.format(sensor.dht_type, humi, temp))
-    #     else:
-    #         print('DHT{0}, humidity & temperature: {1}'.format(sensor.dht_type, temp))
-    #     time.sleep(1)
+    # Connect to Thingsboard
+    client = TBDeviceMqttClient(thingsboard_server, 1883 ,access_token)
+    client.connect()
+    start = time.time()
+
     while True:
-        temp = temper()
-        print('Temperature: {}C, Humidity: {}%'.format(temp[1], temp[0]))
+        end = time.time()
+        if end-start > 10:
+            # Read and display the temperature data
+            temp = temper()
+            message = 'Temperature: {}C, Humidity: {}%'.format(temp[1], temp[0]
+
+            #Format the data in Json to send to thingsboard
+            telemetry = {"temperature": temp[1], "humidity": temp[0]}
+
+            #Send the data
+            client.send_telemetry(telemetry).get()
+            start = time.time()
+            print("Message sent! " + message)
+        
+
 
 if __name__ == '__main__':
     main()
